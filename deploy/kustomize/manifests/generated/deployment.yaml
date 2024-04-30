@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: foo
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: foo
+  template:
+    metadata:
+      labels:
+        app: foo
+    spec:
+      containers:
+        - name: nginx-unprivileged
+          image: nginxinc/nginx-unprivileged:latest
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            runAsUser: 101
+            runAsGroup: 101
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+  revisionHistoryLimit: 5

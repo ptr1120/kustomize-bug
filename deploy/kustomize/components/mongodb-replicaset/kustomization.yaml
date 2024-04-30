@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+
+resources:
+  # definition of replica-set to be deployed using the mongodb operator
+  - ./../../manifests/generated/mongodb.yaml
+  # required roles
+  - https://git.ceventis.de/k8s/playground/peter-getting-started/infrastructure-service-configuration.git/deploy/kustomize/infrastructure/mongodb-operator/base/rbac?ref=main

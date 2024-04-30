@@ -1,0 +1,20 @@
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: mongodb-replicatset
+spec:
+  members: 1
+  security:
+    authentication:
+      modes:
+        - SCRAM
+  type: ReplicaSet
+  users:
+    - name: mongodb-user
+      db: admin
+      connectionStringSecretName: mongodb-user
+      roles:
+        - name: readWriteAnyDatabase
+          db: admin
+      scramCredentialsSecretName: mongodb-user-scram
+  version: 6.0.13
